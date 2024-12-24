@@ -97,8 +97,12 @@ p {
 
 @media (max-width: 768px) {
   .toggle-btn {
+    position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .header h2 {
+    padding-left: 40px;
   }
 }

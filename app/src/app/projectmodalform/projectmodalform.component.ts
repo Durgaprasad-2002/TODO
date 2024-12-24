@@ -66,7 +66,7 @@ export class ProjectmodalformComponent {
   async createProject(projectName: string) {
     this.http
       .post<{ _id: string; name: string }>(
-        `http://localhost:5000/api/projects/`,
+        `https://todo-2za8.onrender.com/api/projects/`,
         {
           projectName: projectName,
         }

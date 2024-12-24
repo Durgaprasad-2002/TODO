@@ -63,11 +63,7 @@ export class AppComponent {
     inreview: [],
     completed: [],
   };
-  projects: { _id: string; name: string }[] = [
-    { _id: '1', name: 'Project Alpha' },
-    { _id: '2', name: 'Project Beta' },
-    { _id: '3', name: 'Project Gamma' },
-  ];
+  projects: { _id: string; name: string }[] = [];
 
   // sidebar toggle function and variable
   isSidebarVisible: boolean = false;
@@ -88,7 +84,7 @@ export class AppComponent {
   // retrives the projects names and ids for sidebar
   getProjects() {
     this.http
-      .get<any[]>('http://localhost:5000/api/projects/names')
+      .get<any[]>('https://todo-2za8.onrender.com/api/projects/names')
       .subscribe((data) => {
         this.projects = data;
         if (this.projects.length > 0) {
@@ -100,7 +96,9 @@ export class AppComponent {
   // retrives tasks by projectId
   getTasks(projectId: string) {
     this.http
-      .get<any>(`http://localhost:5000/api/projects/tasks/${projectId}`)
+      .get<any>(
+        `https://todo-2za8.onrender.com/api/projects/tasks/${projectId}`
+      )
       .subscribe((data) => {
         this.projectName = data.name;
         this.tasks = data;

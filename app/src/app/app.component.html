@@ -7,7 +7,11 @@
   </div>
   <div class="body">
     <div class="header">
-      <button class="toggle-btn" (click)="toggleSidebar()">
+      <button
+        class="toggle-btn"
+        (click)="toggleSidebar()"
+        [ngStyle]="{ position: isSidebarVisible ? 'fixed' : 'absolute' }"
+      >
         <span *ngIf="!isSidebarVisible">☰</span>
         <span *ngIf="isSidebarVisible">⨉</span>
       </button>

@@ -29,6 +29,7 @@ export class ModalformComponent implements OnInit {
   showModal: boolean = false;
   isValidForm: boolean = false;
   isSubmitting: boolean = false;
+  isEdit: boolean = false;
 
   //initializes the reactive form
   myForm: FormGroup = new FormGroup({});
@@ -41,6 +42,7 @@ export class ModalformComponent implements OnInit {
 
     this.sharedService.task$.subscribe((state: any) => {
       let { taskname, startdate, enddate, status, _id } = state;
+      this.isEdit = true;
       this.myForm.setValue({
         taskName: taskname,
         startDate: new Date(startdate).toISOString().split('T')[0],
@@ -59,6 +61,7 @@ export class ModalformComponent implements OnInit {
 
   //hide modal and reset modal
   hideModal() {
+    this.isEdit = false;
     this.myForm.reset();
     this.sharedService.setValue(null);
     this.sharedService.setShowModal(!this.showModal);
@@ -98,6 +101,57 @@ export class ModalformComponent implements OnInit {
     });
   }
 
+  delete() {
+    this.shared.projectId$.pipe(take(1)).subscribe((projectId) => {
+      if (projectId) {
+        this.sharedService.task$.subscribe((data) => {
+          if (data) {
+            //this calls the delete task
+            this.deleteTask(
+              this.myForm.value,
+              projectId,
+              data._id,
+              data.status
+            );
+          }
+        });
+      } else {
+        alert('Project is not Created!');
+        console.log('No projectId available.');
+      }
+    });
+  }
+
+  //DeleteTask()
+  deleteTask(
+    task: {
+      taskName: string;
+      startDate: string;
+      endDate: string;
+      status: string;
+    },
+    projectId: string,
+    taskId: string,
+    status: string
+  ): void {
+    if (this.isSubmitting) {
+      alert('Already submitting...');
+      console.log('Already submitting...');
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    this.http
+      .delete(
+        `https://todo-2za8.onrender.com/api/projects/${projectId}/${status}/${taskId}`
+      )
+      .subscribe({
+        next: (data) => this.onSuccess(),
+        error: (err) => this.onError(err),
+      });
+  }
+
   //updates task
   updateTask(
     task: {
@@ -120,7 +174,7 @@ export class ModalformComponent implements OnInit {
 
     this.http
       .put(
-        `http://localhost:5000/api/projects/${projectId}/${status}/${taskId}`,
+        `https://todo-2za8.onrender.com/api/projects/${projectId}/${status}/${taskId}`,
         {
           taskname: task.taskName,
           startdate: task.startDate,
@@ -159,11 +213,14 @@ export class ModalformComponent implements OnInit {
         inprogress: [];
         inreview: [];
         completed: [];
-      }>(`http://localhost:5000/api/projects/${projectId}/${task.status}`, {
-        taskname: task.taskName,
-        startdate: task.startDate,
-        enddate: task.endDate,
-      })
+      }>(
+        `https://todo-2za8.onrender.com/api/projects/${projectId}/${task.status}`,
+        {
+          taskname: task.taskName,
+          startdate: task.startDate,
+          enddate: task.endDate,
+        }
+      )
       .subscribe({
         next: (data) => this.onSuccess(),
         error: (err) => this.onError(err),
@@ -172,6 +229,7 @@ export class ModalformComponent implements OnInit {
 
   //executes on request failed
   onSuccess() {
+    this.isEdit = false;
     this.myForm.reset();
     this.isSubmitting = false;
     this.hideModal();

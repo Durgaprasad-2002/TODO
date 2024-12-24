@@ -2,7 +2,7 @@
   <div class="modal">
     <form (ngSubmit)="SubmitForm($event)" [formGroup]="myForm">
       <div class="modal-header">
-        <h4>Add New</h4>
+        <h4>{{ isEdit ? "Edit Task" : "Add New Task" }}</h4>
         <button class="close-btn" type="button" (click)="hideModal()">⨉</button>
       </div>
       <div class="modal-body-inner">
@@ -55,7 +55,16 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="submit-btn" type="submit">
+        <button
+          *ngIf="isEdit"
+          class="submit-btn"
+          type="button"
+          (click)="delete()"
+          [disabled]="isSubmitting"
+        >
+          {{ isSubmitting ? "Deleting..." : "Delete" }}
+        </button>
+        <button class="submit-btn" type="submit" [disabled]="isSubmitting">
           {{ isSubmitting ? "Adding..." : "Add" }}
         </button>
       </div>
