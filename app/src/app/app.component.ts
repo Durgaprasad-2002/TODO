@@ -14,6 +14,7 @@ import { SharedServiceService } from './shared-service.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   imports: [
+    RouterOutlet,
     SidebarComponent,
     TaskholderComponent,
     CommonModule,
