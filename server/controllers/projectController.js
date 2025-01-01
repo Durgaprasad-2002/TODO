@@ -22,7 +22,6 @@ const getProjects = async (req, res) => {
   const { projectId } = req.params;
   try {
     const projects = await Project.findOne({ _id: projectId });
-
     res.status(200).json(projects);
   } catch (error) {
     console.log("Error : ", error.message);
@@ -108,10 +107,7 @@ const createTask = async (req, res) => {
 
     if (!project) return res.status(404).json({ message: "Project not found" });
 
-    if (!project[status])
-      return res.status(400).json({ message: "Invalid status" });
-
-    project[status].push(newTask);
+    project["tasks"].push(newTask);
 
     await project.save();
 
