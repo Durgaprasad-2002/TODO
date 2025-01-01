@@ -14,7 +14,7 @@ router.post("/", createProject); // creates a project
 router.get("/tasks/:projectId", getProjects); // retrives tasks by projectId
 router.get("/names", getProjectNamesAndIds); // retrives names and id's of projects
 router.post("/:projectId", createTask); // Creates task
-router.put("/:projectId/:status/:taskId", updateTask); // Update's  task
-router.delete("/:projectId/:status/:taskId", deleteTask); // Delete's  task
+router.put("/:projectId/:taskId", updateTask); // Update's  task
+router.delete("/:projectId/:taskId", deleteTask); // Delete's  task
 
 module.exports = router;
